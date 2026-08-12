@@ -786,29 +786,36 @@ window.__LEITOR_VERSION__ = '0.6.0';
   }
 
   function renderDeviceRows(devices) {
-    if (!deviceRowsEl) return;
-    deviceRowsEl.innerHTML = '';
-    const valid = Array.isArray(devices) ? devices.filter(d => d && d.total != null) : [];
-    const rows = valid.length ? valid : [{ label: 'DRENO', total: null }];
-    for (const d of rows) {
-      const row = document.createElement('tr');
-      row.className = 'wide-row device-row';
+  if (!deviceRowsEl) return;
 
-      const label = document.createElement('th');
-      label.scope = 'row';
-      label.className = 'wide-label';
-      label.textContent = d.label || d.kind || 'DRENO';
+  deviceRowsEl.innerHTML = '';
 
-      const value = document.createElement('td');
-      value.colSpan = 2;
-      value.className = 'wide-value';
-      value.textContent = d.total == null ? 'Não registrado' : `${formatNumber(d.total, 0)} mL`;
+  const valid = Array.isArray(devices)
+    ? devices.filter(d => d && d.total != null)
+    : [];
 
-      row.append(label, value);
-      deviceRowsEl.appendChild(row);
-    }
+  const rows = valid.length
+    ? valid
+    : [{ label: 'DRENO', total: null }];
+
+  for (const d of rows) {
+    const row = document.createElement('div');
+    row.className = 'wide-metric';
+
+    const label = document.createElement('span');
+    label.className = 'metric-label';
+    label.textContent = d.label || d.kind || 'DRENO';
+
+    const value = document.createElement('span');
+    value.className = 'metric-value';
+    value.textContent = d.total == null
+      ? 'Não registrado'
+      : `${formatNumber(d.total, 0)} mL`;
+
+    row.append(label, value);
+    deviceRowsEl.appendChild(row);
   }
-
+}
   function buildDeviceLines(devices) {
     const valid = Array.isArray(devices) ? devices.filter(d => d && d.total != null) : [];
     if (!valid.length) return ['DRENO Não registrado'];
